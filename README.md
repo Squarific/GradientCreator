@@ -8,7 +8,8 @@ Javascript gradient creator
 
 	var gradientCreator = new GradientCreator(container);
 	gradientCreator.addEventListener("change", function (event) {
-		console.log(event.gradient);
+		// event.type = "change"
+		console.log(event.gradient); // event gradient is an object explained below
 	});
 ```
 
@@ -16,13 +17,15 @@ On a change this will output something like:
 
 ```json
 	{
-		type: "linear", //or radial	
-		stops: [
-			{pos: 0.000, color: "2434AABB"}, // Color is hex8, without the #
-			{pos: 0.481, color: "FFFFFFFF"} // Position is a number between 0 and 1 inclusive
+		"type": "linear", //or radial	
+		"stops": [
+			{"pos": 0.000, "color": "2434AABB"},
+			{"pos": 0.481, "color": "FFFFFFFF"}
 		]
 	}
 ```
+
+Color is hex8, position is a number between 0 and 1 inclusive.
 
 # Dependencies
 
