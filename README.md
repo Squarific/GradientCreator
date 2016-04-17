@@ -30,9 +30,9 @@ Color is hex8, position is a number between 0 and 1 inclusive.
 
 # Dependencies
 
-// Spectrum Colorpicker v1.6.0
-// https://github.com/bgrins/spectrum
-// Author: Brian Grinstead
+// Spectrum Colorpicker v1.6.0    
+// https://github.com/bgrins/spectrum    
+// Author: Brian Grinstead    
 // License: MIT
 
 Spectrum requires jQuery, so that is needed aswell.    
