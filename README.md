@@ -17,7 +17,7 @@ On a change this will output something like:
 
 ```json
 	{
-		"type": "linear", //or radial	
+		"type": "linear",	
 		"stops": [
 			{"pos": 0.000, "color": "2434AABB"},
 			{"pos": 0.481, "color": "FFFFFFFF"}
@@ -25,6 +25,7 @@ On a change this will output something like:
 	}
 ```
 
+The type can be either linear or radial.
 Color is hex8, position is a number between 0 and 1 inclusive.
 
 # Dependencies
