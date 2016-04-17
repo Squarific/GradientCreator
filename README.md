@@ -1,6 +1,16 @@
 # GradientCreator
 Javascript gradient creator
 
+# Examples
+
+https://squarific.github.io/GradientCreator/
+
+Used in other projects:
+
+http://www.anondraw.com
+
+Let me know if you use this so I can add you to the list!
+
 # How to use
 
 ```javascript
