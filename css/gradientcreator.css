@@ -1,7 +1,12 @@
 .gradient-preview {
 	position:relative;
+<<<<<<< HEAD
 	height:90%;
 	width:3em;
+=======
+	height:3em;
+	width:90%;
+>>>>>>> bb6267e55f371e5bfbb184f54141d95502093157
 	width:calc(100% - 2em);
 	margin-bottom:2em;
 }

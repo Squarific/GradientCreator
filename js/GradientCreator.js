@@ -62,6 +62,7 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 
 	document.addEventListener("touchmove", function (event) {
 		if (!this._draggingStop) return;
+
 		var relativeHeight = this.getRelativeHeight(event, this._previewDom);
 
 		// Clamp between 0 and 1
@@ -228,7 +229,6 @@ GradientCreator.prototype.getRelativeHeight = function getRelativeHeight (event,
 
 	return relativeY / boundingClientRect.height;
 };
-
 
 /*
 	Replace the css of the preview div to match the stops
