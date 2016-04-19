@@ -25,12 +25,12 @@ Let me know if you use this so I can add you to the list!
 
 On a change this will output something like:
 
-```json
+```javascript
 	{
 		"type": "linear",	
 		"stops": [
-			{"pos": 0.000, "color": "2434AABB"},
-			{"pos": 0.481, "color": "FFFFFFFF"}
+			{"pos": 0.000, "color": tinycolor()},
+			{"pos": 0.481, "color": tinycolor()}
 		]
 	}
 ```
