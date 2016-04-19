@@ -1,0 +1,15 @@
+.gradient-preview {
+	position:relative;
+	height:90%;
+	width:3em;
+	width:calc(100% - 2em);
+	margin-bottom:2em;
+}
+
+.gradient-stop {
+	position:absolute;
+	height:2em;
+	width:2em;
+	border:1px inset gray;
+	top:3em;
+}
