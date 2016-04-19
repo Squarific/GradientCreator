@@ -37,6 +37,7 @@ On a change this will output something like:
 
 The type can be either linear or radial.
 Color is hex8, position is a number between 0 and 1 inclusive.
+You should not assume that because the change event has fired that something did in fact change.
 
 # Dependencies
 

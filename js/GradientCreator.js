@@ -85,7 +85,6 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 			pos: relativeWidth,
 			color: tinycolor()
 		});
-		this.rerender();
 	}.bind(this));
 
 	this.INITIAL_STOPS.forEach(this.createStop.bind(this));
@@ -93,6 +92,7 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 
 /*
 	This function creates a stop dom element from {pos: 0-1, color: tinycolor/csscolor/...}
+	It also fires the change event and rerenders
 */
 GradientCreator.prototype.createStop = function createStop (stop) {
 	var stopDom = this._previewDom.appendChild(document.createElement("div"))
@@ -115,6 +115,8 @@ GradientCreator.prototype.createStop = function createStop (stop) {
 		this.deselectStops();
 		this.selectStop(event.target);
 	}.bind(this))
+
+	this.rerender();
 };
 
 /*
@@ -215,6 +217,8 @@ GradientCreator.prototype.getRelativeWidth = function getRelativeWidth (event, t
 
 /*
 	Replace the css of the preview div to match the stops
+	Should be called when the stops have changed
+	This function also fires the change event
 */
 GradientCreator.prototype.rerender = function rerender () {
 	var parsedStops = this.getStops().map(function (stop, index, stops) {
@@ -222,6 +226,11 @@ GradientCreator.prototype.rerender = function rerender () {
 	});
 
 	this._previewDom.style.background = "linear-gradient(90deg, " + parsedStops.join(",") + ")";
+
+	this.dispatchEvent({
+		type: "change",
+		stops: this.getStops();
+	});
 };
 
 /**
