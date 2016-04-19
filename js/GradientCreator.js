@@ -51,24 +51,23 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 
 	document.addEventListener("mousemove", function (event) {
 		if (!this._draggingStop) return;
-		var relativeHeight = this.getRelativeHeight(event, this._previewDom);
+		var relativeWidth = this.getRelativeWidth(event, this._previewDom);
 
 		// Clamp between 0 and 1
-		relativeHeight = Math.min(1, Math.max(0, relativeHeight));
+		relativeWidth = Math.min(1, Math.max(0, relativeWidth));
 
-		this._draggingStop.style.top = relativeHeight * 100 + "%";
+		this._draggingStop.style.left = relativeWidth * 100 + "%";
 		this.rerender();
 	}.bind(this));
 
 	document.addEventListener("touchmove", function (event) {
 		if (!this._draggingStop) return;
-
-		var relativeHeight = this.getRelativeHeight(event, this._previewDom);
+		var relativeWidth = this.getRelativeWidth(event, this._previewDom);
 
 		// Clamp between 0 and 1
-		relativeHeight = Math.min(1, Math.max(0, relativeHeight));
+		relativeWidth = Math.min(1, Math.max(0, relativeWidth));
 
-		this._draggingStop.style.top = relativeHeight * 100 + "%";
+		this._draggingStop.style.left = relativeWidth * 100 + "%";
 		this.rerender();
 	}.bind(this));
 
@@ -81,9 +80,9 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 	}.bind(this));
 
 	preview.addEventListener("dblclick", function (event) {
-		var relativeHeight = this.getrelativeHeight(event, this._previewDom);
+		var relativeWidth = this.getRelativeWidth(event, this._previewDom);
 		this.createStop({
-			pos: relativeHeight,
+			pos: relativeWidth,
 			color: tinycolor()
 		});
 		this.rerender();
@@ -99,7 +98,7 @@ GradientCreator.prototype.createStop = function createStop (stop) {
 	var stopDom = this._previewDom.appendChild(document.createElement("div"))
 	stopDom.className = "gradient-stop";
 	stopDom.style.background = stop.color;
-	stopDom.style.top = stop.pos * 100 + "%";
+	stopDom.style.left = stop.pos * 100 + "%";
 	stopDom.color = stop.color;
 
 	stopDom.addEventListener("mousedown", function (event) {
@@ -180,7 +179,7 @@ GradientCreator.prototype.getStops = function getStops () {
 
 	for (var key = 0; key < this._previewDom.children.length; key++) {
 		stops.push({
-			pos: parseFloat(this._previewDom.children[key].style.top.slice(0, -1)) / 100,
+			pos: parseFloat(this._previewDom.children[key].style.left.slice(0, -1)) / 100,
 			color: this._previewDom.children[key].color
 		});
 	}
@@ -213,22 +212,6 @@ GradientCreator.prototype.getRelativeWidth = function getRelativeWidth (event, t
 	return relativeX / boundingClientRect.width;
 };
 
-GradientCreator.prototype.getRelativeHeight = function getRelativeHeight (event, target) {
-	// If there is no clientX/Y (meaning no mouse event) and there are no changed touches
-	// meaning no touch event, then we can't get the coords relative to the target element
-	// for this event
-	if (typeof event.clientY !== "number" && (!event.changedTouches || !event.changedTouches[0] || typeof event.changedTouches[0].clientY !== "number"))
-		return 0;
-
-	// Return the coordinates relative to the target element
-	var clientY = (typeof event.clientY === 'number') ? event.clientY : event.changedTouches[0].clientY,
-	    target = target || event.target || document.elementFromPoint(clientX, clientY);
-
-	var boundingClientRect = target.getBoundingClientRect();
-	var relativeY = clientY - boundingClientRect.top;
-
-	return relativeY / boundingClientRect.height;
-};
 
 /*
 	Replace the css of the preview div to match the stops
@@ -238,7 +221,7 @@ GradientCreator.prototype.rerender = function rerender () {
 		return stop.color + " " + stop.pos * 100 + "%";
 	});
 
-	this._previewDom.style.background = "linear-gradient(180deg, " + parsedStops.join(",") + ")";
+	this._previewDom.style.background = "linear-gradient(90deg, " + parsedStops.join(",") + ")";
 };
 
 /**

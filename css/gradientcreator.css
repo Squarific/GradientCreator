@@ -1,7 +1,7 @@
 .gradient-preview {
 	position:relative;
-	height:90%;
-	width:3em;
+	height:3em;
+	width:90%;
 	width:calc(100% - 2em);
 	margin-bottom:2em;
 }
