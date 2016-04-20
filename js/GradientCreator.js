@@ -229,7 +229,7 @@ GradientCreator.prototype.rerender = function rerender () {
 
 	this.dispatchEvent({
 		type: "change",
-		stops: this.getStops();
+		stops: this.getStops()
 	});
 };
 
