@@ -13,3 +13,12 @@
 	border:1px inset gray;
 	top:3em;
 }
+
+.sp-container {
+	position:relative;
+	top:7em;
+}
+
+.hide {
+	display:none;
+}

@@ -16,10 +16,10 @@ function GradientCreator (container) {
 
 GradientCreator.prototype.INITIAL_STOPS = [{
 	pos: 0,
-	color: tinycolor("black")
+	color: "black"
 }, {
 	pos: 1,
-	color: tinycolor("white")
+	color: "white"
 }];
 
 /*
@@ -57,6 +57,8 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 		relativeWidth = Math.min(1, Math.max(0, relativeWidth));
 
 		this._draggingStop.style.left = relativeWidth * 100 + "%";
+		this._hasDragged = true;
+		this.hideColorPicker();
 		this.rerender();
 	}.bind(this));
 
@@ -68,6 +70,8 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 		relativeWidth = Math.min(1, Math.max(0, relativeWidth));
 
 		this._draggingStop.style.left = relativeWidth * 100 + "%";
+		this._hasDragged = true;
+		this.hideColorPicker();
 		this.rerender();
 	}.bind(this));
 
@@ -77,6 +81,11 @@ GradientCreator.prototype.createPreviewDom = function createPreviewDom () {
 
 	document.addEventListener("touchend", function (event) {
 		delete this._draggingStop;
+	}.bind(this));
+
+	document.addEventListener("click", function (event) {
+		if (event.target.classList.contains("gradient-stop")) return;
+		this.hideColorPicker();
 	}.bind(this));
 
 	preview.addEventListener("dblclick", function (event) {
@@ -99,69 +108,93 @@ GradientCreator.prototype.createStop = function createStop (stop) {
 	stopDom.className = "gradient-stop";
 	stopDom.style.background = stop.color;
 	stopDom.style.left = stop.pos * 100 + "%";
-	stopDom.color = stop.color;
+	stopDom.color = tinycolor(stop.color);
 
 	stopDom.addEventListener("mousedown", function (event) {
 		this._draggingStop = stopDom;
-		this.selectStop(stopDom);
+		this._hasDragged = false;
 	}.bind(this));
 
 	stopDom.addEventListener("touchstart", function (event) {
 		this._draggingStop = stopDom;
-		this.selectStop(stopDom);
+		this._hasDragged = false;
 	}.bind(this));
 
 	stopDom.addEventListener("click", function (event) {
-		this.deselectStops();
-		this.selectStop(event.target);
+		if (this._hasDragged) return;
+		this.changeColorOf(stopDom);
 	}.bind(this))
 
 	this.rerender();
 };
 
-/*
-	Deselects all stop elements
-*/
-GradientCreator.prototype.deselectStops = function deselectStops () {
-	for (var key = 0; key < this._previewDom.children.length; key++) {
-		this._previewDom.children[key].style.border = "";
-	}
+GradientCreator.prototype.hideColorPicker = function hideColorPicker () {
+	delete this._changingColorOf;
 
-	this._selectedStop = undefined;	
+	// Search for the color picker
+	for (var k = 0; k < this._previewDom.children.length; k++) {
+
+		// Found
+		if (this._previewDom.children[k].classList.contains("sp-container")) {
+				this._previewDom.children[k].classList.add("hide");
+		}
+	}
 };
 
-/*
-	Selects the given stop for color manipulation
-*/
-GradientCreator.prototype.selectStop = function selectStop (stopDom) {
-	this.deselectStops();
-	this._selectedStop = stopDom;
-	stopDom.style.border = "1px inset red";
+GradientCreator.prototype.changeColorOf = function changeColorOf (stop) {
+	// Search for the color picker
+	for (var k = 0; k < this._previewDom.children.length; k++) {
+
+		// Found
+		if (this._previewDom.children[k].classList.contains("sp-container")) {
+
+			// Place it at the stop
+			this._previewDom.children[k].style.left = stop.style.left;
+
+			// If we are already changing the color of this one just remove the color picker
+			if (this._changingColorOf == stop) {
+				this._previewDom.children[k].classList.add("hide");
+
+			// Otherwise show it
+			} else {
+				this._previewDom.children[k].classList.remove("hide");
+				$(this.spectrumInput).spectrum("set", stop.color);
+			}
+		}
+	}
+
+	this._changingColorOf = stop;
 };
 
 /*
 	Creates the color selector
 */
 GradientCreator.prototype.createColorSelector = function createColorSelector () {
-	var input = this._container.appendChild(document.createElement("input"));
+	var input = this._previewDom.appendChild(document.createElement("input"));
 	input.type = "color";
 
-	var spectrum = $(input).spectrum({
+	this.spectrumInput = input;
+
+	$(this.spectrumInput).spectrum({
 		showAlpha: true,
 		showInput: true,
+		showButtons: false,
+		flat: true,
 		showInitial: true,
 		preferredFormat: "rgb",
 		showPalette: true,
 		maxSelectionSize: 32,
 		clickoutFiresChange: true,		
 		move: function (color) {
-			if (this._selectedStop) {
-				this._selectedStop.color = color;
-				this._selectedStop.style.background = color;
+			if (this._changingColorOf) {
+				this._changingColorOf.color = color;
+				this._changingColorOf.style.background = color;
 				this.rerender();
 			}
 		}.bind(this)
 	});
+
+	this.hideColorPicker();
 };
 
 /*
@@ -180,6 +213,7 @@ GradientCreator.prototype.getStops = function getStops () {
 	var stops = [];
 
 	for (var key = 0; key < this._previewDom.children.length; key++) {
+		if (!this._previewDom.children[key].classList.contains("gradient-stop")) continue;
 		stops.push({
 			pos: parseFloat(this._previewDom.children[key].style.left.slice(0, -1)) / 100,
 			color: this._previewDom.children[key].color
